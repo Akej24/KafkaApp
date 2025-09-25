@@ -1,0 +1,22 @@
+<!-- Necessary to clean up kafka dependency spam-->
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss} %-5level [%logger{36}] %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <!-- Only show INFO+ for your app -->
+  <logger name="App" level="INFO"/>
+  <logger name="org.example" level="INFO"/>
+
+  <!-- Silence Kafka & Zookeeper -->
+  <logger name="org.apache.kafka" level="WARN"/>
+  <logger name="kafka" level="WARN"/>
+  <logger name="org.apache.zookeeper" level="WARN"/>
+
+  <!-- Root logger (default for everything else) -->
+  <root level="INFO">
+    <appender-ref ref="STDOUT"/>
+  </root>
+</configuration>

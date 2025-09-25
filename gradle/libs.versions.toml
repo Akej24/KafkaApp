@@ -1,0 +1,14 @@
+# https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
+
+[versions]
+junit = "4.13.2"
+kafka = "2.8.1"
+springKafka = "2.9.10"
+logback = "1.5.6"
+
+[libraries]
+junit = { module = "junit:junit", version.ref = "junit" }
+kafkaClients = { module = "org.apache.kafka:kafka-clients", version.ref = "kafka" }
+springKafka = { module = "org.springframework.kafka:spring-kafka", version.ref = "springKafka" }
+springKafkaTest = { module = "org.springframework.kafka:spring-kafka-test", version.ref = "springKafka" }
+logbackClassic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }

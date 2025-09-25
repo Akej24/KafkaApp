@@ -1,0 +1,9 @@
+version: "3.9"
+services:
+  kafka-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kafka-app
+    tty: true
+    stdin_open: true
