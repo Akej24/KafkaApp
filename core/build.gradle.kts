@@ -7,22 +7,29 @@ plugins {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(25))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 
 application {
-    mainClass.set("App")
+    mainClass.set("org.example.App")
 }
 
 dependencies {
+    testImplementation(libs.junit)
+    implementation(libs.logbackClassic)
     implementation(libs.kafkaClients)
     implementation(libs.springKafka)
     implementation(libs.springKafkaTest)
-    implementation(libs.logbackClassic)
-    testImplementation(libs.junit)
+    implementation(libs.testcontainers)
+    implementation(libs.testcontainersPostgresql)
+    implementation(libs.postgresql)
 }
 
 repositories {
     mavenCentral()
+}
+
+tasks.withType<JavaExec> {
+    standardInput = System.`in`
 }

@@ -2,13 +2,20 @@
 
 [versions]
 junit = "4.13.2"
+logback = "1.5.6"
 kafka = "2.8.1"
 springKafka = "2.9.10"
-logback = "1.5.6"
+testcontainers = "1.20.3"
+postgresql = "42.6.0"
 
 [libraries]
 junit = { module = "junit:junit", version.ref = "junit" }
+logbackClassic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+
 kafkaClients = { module = "org.apache.kafka:kafka-clients", version.ref = "kafka" }
 springKafka = { module = "org.springframework.kafka:spring-kafka", version.ref = "springKafka" }
 springKafkaTest = { module = "org.springframework.kafka:spring-kafka-test", version.ref = "springKafka" }
-logbackClassic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+
+testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
+testcontainersPostgresql = { module = "org.testcontainers:postgresql", version.ref = "testcontainers" }
+postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }

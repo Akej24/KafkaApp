@@ -1,9 +1,27 @@
 version: "3.9"
+
 services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: testUsername
+      POSTGRES_PASSWORD: testPassword
+      POSTGRES_DB: testDatabase
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
   kafka-app:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: kafka-app
+    depends_on:
+      - postgres
     tty: true
     stdin_open: true
+
+volumes:
+  pgdata:
