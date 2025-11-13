@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Scanner;
+import java.util.concurrent.Executors;
 
 public class App {
 
@@ -26,14 +27,14 @@ public class App {
             LOG.info("Kafka broker running at: {}", kafka.getBootstrapServers());
             final var eventRepo = new MyEventRepository(PostgresConnection.getDataSource(config), config);
             final var producer = new MyKafkaProducer(kafka.getBootstrapServers(), kafka.getTopicEvents(config));
-            final var consumer = new MyKafkaConsumer(eventRepo, kafka.getBootstrapServers(), kafka.getTopicEvents(config));
+            final var consumer = new MyKafkaConsumer(eventRepo, kafka.getBootstrapServers(), kafka.getTopicEvents(config), kafka.getPartitionNumber());
 
             LOG.info("Creating 'events' table...");
             eventRepo.createEventsTable();
 
             LOG.info("Producing test messages...");
-            producer.produceTestScheduledMessages();
-            consumer.cliAndInfinityConsuming(scanner);
+            Executors.newSingleThreadExecutor().execute(producer::produceTestScheduledMessages);
+            while (true) consumer.cliAndInfinityConsuming(scanner);
 
         } catch (final Exception e) {
             LOG.error(e.getMessage(), e);

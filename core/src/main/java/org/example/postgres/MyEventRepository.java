@@ -24,12 +24,11 @@ public class MyEventRepository {
     public void createEventsTable() {
         final var sql = appConfig.get(AppConfig.Props.SQL_EVENTS_CREATE.key()).orElse("");
         safeExecute(conn -> conn.createStatement().execute(sql));
-        LOG.info("Schema initialized");
     }
 
-    public void insert(final MyEvent event) {
+    public boolean insert(final MyEvent event) {
         final var sql = appConfig.get(AppConfig.Props.SQL_EVENTS_INSERT.key()).orElse("");
-        safeExecute(conn -> {
+        return safeExecute(conn -> {
             var stmt = conn.prepareStatement(sql);
             stmt.setString(1, event.key());
             stmt.setString(2, event.value());
@@ -39,7 +38,6 @@ public class MyEventRepository {
             stmt.setLong(6, event.offset());
             stmt.executeUpdate();
         });
-        LOG.info("Event '{}' persisted", event.key());
     }
 
     public List<MyEvent> selectAll() {
@@ -49,24 +47,25 @@ public class MyEventRepository {
             final var rs = conn.prepareStatement(sql).executeQuery();
             while (rs.next()) {
                 result.add(new MyEvent(
-                        rs.getString("key"),
-                        rs.getString("value"),
-                        rs.getLong("timestamp"),
-                        rs.getString("topic"),
-                        rs.getInt("partition"),
-                        rs.getLong("offset")
+                        rs.getString(MyEvent.SqlColumns.KEY),
+                        rs.getString(MyEvent.SqlColumns.VALUE),
+                        rs.getLong(MyEvent.SqlColumns.TIMESTAMP),
+                        rs.getString(MyEvent.SqlColumns.TOPIC),
+                        rs.getInt(MyEvent.SqlColumns.PARTITION),
+                        rs.getLong(MyEvent.SqlColumns.OFFSET)
                 ));
             }
         });
-        LOG.info("Current 'events' entries: {}", result.size());
         return result;
     }
 
-    private void safeExecute(final ThrowingConsumer<Connection> command) {
+    private boolean safeExecute(final ThrowingConsumer<Connection> command) {
         try (final var connection = dataSource.getConnection()) {
             command.accept(connection);
+            return true;
         } catch (final Throwable e) {
             LOG.error("SQL query failed due to: {}", e.getMessage());
+            return false;
         }
     }
 }

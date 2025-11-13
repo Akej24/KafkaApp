@@ -45,7 +45,7 @@ docker exec -it kafka-app bash
 - ✅ Dla nowego Id sesji (będzie to też consumerID dla kafki) ma rozpocząć konsumpcję od pierwszej
   wiadomości
 - ✅ Zadna wiadomość nie może zostać utracona
-- [ ] Aplikacja powinna mieć możliwość rekonsumpcji: po podaniu parametru Id sesji or Timestamp wiadomości, nastąpi
+- ✅ Aplikacja powinna mieć możliwość rekonsumpcji: po podaniu parametru Id sesji or Timestamp wiadomości, nastąpi
   re-konsumpcja OD wiadomości z podanym timestamp
 
 ---

@@ -35,6 +35,10 @@ public class KafkaManager implements AutoCloseable {
         return config.get(AppConfig.Props.KAFKA_TOPIC_EVENTS.key()).orElse("events");
     }
 
+    public int getPartitionNumber() {
+        return 0;
+    }
+
     @Override
     public void close() {
         kafka.destroy();
