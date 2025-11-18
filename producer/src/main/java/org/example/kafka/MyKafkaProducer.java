@@ -5,12 +5,14 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.example.config.AppConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
@@ -23,9 +25,9 @@ public class MyKafkaProducer {
     private final String bootstrapServers;
     private final String topic;
 
-    public MyKafkaProducer(final String bootstrapServers, final String topic) {
-        this.bootstrapServers = bootstrapServers;
-        this.topic = topic;
+    public MyKafkaProducer(final AppConfig config) {
+        this.bootstrapServers = config.get(AppConfig.Props.KAFKA_BOOTSTRAP_SERVERS.key()).orElse("localhost:9092");
+        this.topic = config.get(AppConfig.Props.KAFKA_TOPIC_EVENTS.key()).orElse("events");
         this.producer = new KafkaProducer<>(getProperties());
         Runtime.getRuntime().addShutdownHook(new Thread(this::closeProducer));
     }
@@ -36,6 +38,7 @@ public class MyKafkaProducer {
             scheduler.schedule(() -> produceBatch(5), 5, TimeUnit.SECONDS);
             scheduler.schedule(() -> produceBatchWithOldKey(2), 8, TimeUnit.SECONDS);
             scheduler.schedule(() -> produceBatchWithOldKey(5), 13, TimeUnit.SECONDS);
+            new CountDownLatch(1).await();
         } catch (final Exception e) {
             LOG.error("Failed to schedule test messages: {}", e.getMessage());
         }

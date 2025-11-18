@@ -6,6 +6,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.consumer.OffsetResetStrategy;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.example.config.AppConfig;
 import org.example.postgres.MyEvent;
 import org.example.postgres.MyEventRepository;
 import org.slf4j.Logger;
@@ -25,11 +26,11 @@ public class MyKafkaConsumer {
     private final int partition;
     private final AtomicBoolean running = new AtomicBoolean(true);
 
-    public MyKafkaConsumer(final MyEventRepository myEventRepository, final String bootstrapServers, final String topic, final int partition) {
+    public MyKafkaConsumer(final MyEventRepository myEventRepository, final AppConfig config) {
         this.myEventRepository = myEventRepository;
-        this.bootstrapServers = bootstrapServers;
-        this.topic = topic;
-        this.partition = partition;
+        this.bootstrapServers = config.get(AppConfig.Props.KAFKA_BROKERS.key()).orElse("localhost:9092");
+        this.topic = config.get(AppConfig.Props.KAFKA_TOPIC_EVENTS.key()).orElse("events");
+        this.partition = config.getInteger(AppConfig.Props.KAFKA_PARTITIONS.key()).orElse(1);
     }
 
     public void cliAndInfinityConsuming(final Scanner scanner) {

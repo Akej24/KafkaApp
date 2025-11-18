@@ -13,12 +13,31 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
-  kafka-app:
+  kafka:
     build:
       context: .
-      dockerfile: Dockerfile
-    container_name: kafka-app
+      dockerfile: ./kafka/Dockerfile
+    hostname: localhost
+    ports:
+      - "34045:34045"
+    container_name: kafka
+
+  producer:
+    build:
+      context: .
+      dockerfile: ./producer/Dockerfile
+    container_name: producer
     depends_on:
+      - kafka
+      - postgres
+
+  consumer:
+    build:
+      context: .
+      dockerfile: ./consumer/Dockerfile
+    container_name: consumer
+    depends_on:
+      - kafka
       - postgres
     tty: true
     stdin_open: true

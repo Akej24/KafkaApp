@@ -21,15 +21,8 @@ dependencies {
     implementation(libs.kafkaClients)
     implementation(libs.springKafka)
     implementation(libs.springKafkaTest)
-    implementation(libs.testcontainers)
-    implementation(libs.testcontainersPostgresql)
-    implementation(libs.postgresql)
 }
 
 repositories {
     mavenCentral()
-}
-
-tasks.withType<JavaExec> {
-    standardInput = System.`in`
 }

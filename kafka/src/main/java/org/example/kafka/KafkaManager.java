@@ -31,14 +31,6 @@ public class KafkaManager implements AutoCloseable {
         return bootstrapServers;
     }
 
-    public String getTopicEvents(final AppConfig config) {
-        return config.get(AppConfig.Props.KAFKA_TOPIC_EVENTS.key()).orElse("events");
-    }
-
-    public int getPartitionNumber() {
-        return 0;
-    }
-
     @Override
     public void close() {
         kafka.destroy();
@@ -49,6 +41,6 @@ public class KafkaManager implements AutoCloseable {
                 config.getInteger(AppConfig.Props.KAFKA_BROKERS.key()).orElse(1),
                 true,
                 config.getInteger(AppConfig.Props.KAFKA_PARTITIONS.key()).orElse(1),
-                config.get(AppConfig.Props.KAFKA_TOPIC_EVENTS.key()).orElse("events"));
+                config.get(AppConfig.Props.KAFKA_TOPIC_EVENTS.key()).orElse("events")).kafkaPorts(34045);
     }
 }
