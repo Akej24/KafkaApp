@@ -32,10 +32,8 @@ public class MyKafkaProducer {
 
     public void produceTestScheduledMessages() {
         try (final var scheduler = Executors.newSingleThreadScheduledExecutor()) {
-            scheduler.schedule(() -> produceBatch(2), 0, TimeUnit.SECONDS);
             scheduler.schedule(() -> produceBatch(5), 5, TimeUnit.SECONDS);
-            scheduler.schedule(() -> produceBatchWithOldKey(2), 8, TimeUnit.SECONDS);
-            scheduler.schedule(() -> produceBatchWithOldKey(5), 13, TimeUnit.SECONDS);
+            scheduler.schedule(() -> produceAnotherBatch(5), 9, TimeUnit.SECONDS);
         } catch (final Exception e) {
             LOG.error("Failed to schedule test messages: {}", e.getMessage());
         }
@@ -43,13 +41,13 @@ public class MyKafkaProducer {
 
     private void produceBatch(final int count) {
         IntStream.range(0, count)
-                .mapToObj(i -> Map.entry(UUID.randomUUID().toString(), "Value-" + i))
+                .mapToObj(i -> Map.entry(UUID.randomUUID() + "#" + i, "Something happened#" + i))
                 .forEach(e -> produceMessage(e.getKey(), e.getValue()));
     }
 
-    private void produceBatchWithOldKey(final int count) {
+    private void produceAnotherBatch(final int count) {
         IntStream.range(0, count)
-                .mapToObj(i -> Map.entry("existing-key-" + i, "NewValue-" + i))
+                .mapToObj(i -> Map.entry(UUID.randomUUID() + "#" + i, "Something else happened#" + i))
                 .forEach(e -> produceMessage(e.getKey(), e.getValue()));
     }
 

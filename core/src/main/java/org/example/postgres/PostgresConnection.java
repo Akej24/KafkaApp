@@ -9,7 +9,7 @@ public class PostgresConnection {
 
     public static DataSource getDataSource(final AppConfig config) {
         final var dataSource = new PGSimpleDataSource();
-        dataSource.setURL(toUrl(
+        dataSource.setURL(connectionString(
                 config.get(AppConfig.Props.POSTGRES_USERNAME.key()).orElse(""),
                 config.get(AppConfig.Props.POSTGRES_PASSWORD.key()).orElse(""),
                 config.get(AppConfig.Props.POSTGRES_HOST.key()).orElse(""),
@@ -22,7 +22,7 @@ public class PostgresConnection {
         return dataSource;
     }
 
-    private static String toUrl(
+    private static String connectionString(
             final String username,
             final String password,
             final String host,

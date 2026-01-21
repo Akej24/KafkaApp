@@ -13,4 +13,4 @@ COPY core/build.gradle.kts core/build.gradle.kts
 RUN chmod +x gradlew
 RUN ./gradlew dependencies --no-daemon
 
-ENTRYPOINT ["./gradlew", "run", "--no-daemon"]
+#ENTRYPOINT ["./gradlew", "run", "--no-daemon"]
